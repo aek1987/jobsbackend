@@ -1,0 +1,6 @@
+com\example\jobplatform\service\OffreService.class
+com\example\jobplatform\model\Offre.class
+com\example\jobplatform\model\Offre$OffreBuilder.class
+com\example\jobplatform\controller\OffreController.class
+com\example\jobplatform\repository\OffreRepository.class
+com\example\jobplatform\JobPlatformApplication.class
