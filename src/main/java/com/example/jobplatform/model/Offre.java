@@ -1,5 +1,8 @@
 package com.example.jobplatform.model;
 
+
+
+
 import jakarta.persistence.*;
 import lombok.*;
 
