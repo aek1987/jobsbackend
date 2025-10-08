@@ -72,7 +72,7 @@ public class Offre {
     // 💻 Télétravail (Oui, Partiel, Non)
     private String teletravail;
 
-    // ⭐ Marquer comme favori
+    // ⭐ Marquer comme favori  gg
     private Boolean favori;
 
     // 📊 Nombre de candidatures
