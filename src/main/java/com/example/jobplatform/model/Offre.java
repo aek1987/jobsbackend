@@ -3,9 +3,11 @@ package com.example.jobplatform.model;
 
 
 
+import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.*;
-
 @Entity
 @Table(name = "offre")
 @Data
@@ -17,11 +19,26 @@ public class Offre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String titre;
-    private String entreprise;
+    private Long entrepriseId;
+    private String poste;
+    private String description;
     private String localisation;
     private Double salaire;
+    private String contrat;
+    private String teletravail;
+    private String niveauExperience;
+    private String avantages;
+    private String status;
 
-    @Column(length = 2000)
-    private String description;
+    private LocalDate datePublication;
+    private LocalDate dateLimite;
+
+    @ElementCollection
+    private List<String> missions;
+
+    @ElementCollection
+    private List<String> competences;
+
+    @ElementCollection
+    private List<String> langues;
 }
