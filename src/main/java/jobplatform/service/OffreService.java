@@ -1,5 +1,6 @@
 package jobplatform.service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jobplatform.model.Offre;
@@ -19,7 +20,10 @@ public class OffreService {
     public List<Offre> getAll() {
         return offreRepository.findAll();
     }
-
+    
+    public Page<Offre> getAllPaged(Pageable pageable) {
+        return offreRepository.findAll(pageable);
+    }
     public Optional<Offre> getById(Long id) {
         return offreRepository.findById(id);
     }

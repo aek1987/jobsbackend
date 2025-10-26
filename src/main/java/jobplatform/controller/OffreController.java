@@ -1,5 +1,9 @@
 package jobplatform.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +27,16 @@ public class OffreController {
     public List<Offre> getAll() {
         return offreService.getAll();
     }
-
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Offre>> getAllPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<Offre> offres = offreService.getAllPaged(pageable);
+        return ResponseEntity.ok(offres);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Offre> getById(@PathVariable Long id) {
         return offreService.getById(id)
