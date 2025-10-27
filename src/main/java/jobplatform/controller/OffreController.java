@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import DTO.OffreDTO;
 import jobplatform.model.Offre;
 import jobplatform.service.OffreService;
 
@@ -28,13 +29,19 @@ public class OffreController {
         return offreService.getAll();
     }
     @GetMapping("/paged")
-    public ResponseEntity<Page<Offre>> getAllPaged(
+    public ResponseEntity<Page<OffreDTO>> getAllPaged(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "id") String sortBy
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "datePublication") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
     ) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        Page<Offre> offres = offreService.getAllPaged(pageable);
+        size = Math.min(size, 50);
+        page = Math.max(page, 0);
+
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        PageRequest pageable = PageRequest.of(page, size, sort);
+
+        Page<OffreDTO> offres = offreService.getAllPagedDTO(pageable);
         return ResponseEntity.ok(offres);
     }
     @GetMapping("/{id}")

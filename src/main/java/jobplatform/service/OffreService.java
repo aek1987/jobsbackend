@@ -3,6 +3,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import DTO.OffreDTO;
 import jobplatform.model.Offre;
 import jobplatform.repository.OffreRepository;
 
@@ -23,6 +24,18 @@ public class OffreService {
     
     public Page<Offre> getAllPaged(Pageable pageable) {
         return offreRepository.findAll(pageable);
+    }
+    public Page<OffreDTO> getAllPagedDTO(Pageable pageable) {
+        return offreRepository.findAll(pageable)
+                .map(offre -> new OffreDTO(
+                        offre.getId(),
+                        offre.getPoste(),
+                        offre.getLocalisation(),
+                        offre.getSalaire(),
+                        offre.getContrat(),
+                        offre.getStatus(),
+                        offre.getDatePublication()
+                ));
     }
     public Optional<Offre> getById(Long id) {
         return offreRepository.findById(id);
