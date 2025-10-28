@@ -17,7 +17,7 @@ public class CorsConfig {
                 registry.addMapping("/**")  // toutes les routes
                 .allowedOrigins(
                         "http://localhost:4200", // dev local
-                        "https://aek1987.github.io/annances/" // front GitHub Pages
+                        "https://aek1987.github.io/annances" // front GitHub Pages
                     ) // ou "http://localhost:4200" en dev
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
