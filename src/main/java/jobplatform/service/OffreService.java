@@ -27,16 +27,19 @@ public class OffreService {
     }
     public Page<OffreDTO> getAllPagedDTO(Pageable pageable) {
         return offreRepository.findAll(pageable)
-                .map(offre -> new OffreDTO(
-                        offre.getId(),
-                        null, offre.getPoste(),
-                        offre.getLocalisation(),
-                        offre.getSalaire(),
-                        offre.getContrat(),
-                        offre.getStatus(),
-                        offre.getDatePublication()
-                ));
+                .map(offre -> OffreDTO.builder()
+                        .id(offre.getId())
+                        .entrepriseid(offre.getEntrepriseId())
+                        .poste(offre.getPoste())
+                        .localisation(offre.getLocalisation())
+                        .salaire(offre.getSalaire())
+                        .contrat(offre.getContrat())
+                        .status(offre.getStatus())
+                        .datePublication(offre.getDatePublication())
+                        .build()
+                );
     }
+
     public Optional<Offre> getById(Long id) {
         return offreRepository.findById(id);
     }
