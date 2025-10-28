@@ -29,7 +29,7 @@ public class OffreService {
         return offreRepository.findAll(pageable)
                 .map(offre -> new OffreDTO(
                         offre.getId(),
-                        offre.getPoste(),
+                        null, offre.getPoste(),
                         offre.getLocalisation(),
                         offre.getSalaire(),
                         offre.getContrat(),
