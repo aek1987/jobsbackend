@@ -31,7 +31,7 @@ public class OffreController {
     @GetMapping("/paged")
     public ResponseEntity<Page<OffreDTO>> getAllPaged(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "12") int size,
             @RequestParam(defaultValue = "datePublication") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir
     ) {
