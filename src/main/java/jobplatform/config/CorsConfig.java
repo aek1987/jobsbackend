@@ -15,7 +15,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // toutes les routes
-                        .allowedOrigins("*") // ou "http://localhost:4200" en dev
+                        .allowedOrigins("http://localhost:4200") // ou "http://localhost:4200" en dev
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
