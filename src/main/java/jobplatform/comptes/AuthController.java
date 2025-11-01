@@ -1,6 +1,10 @@
 package jobplatform.comptes;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -35,20 +39,32 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Account account) {
         try {
             System.out.println("🔍 Tentative de login : " + account.getEmail());
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             System.out.println("✅ Connexion réussie : " + userDetails.getUsername());
-            return ResponseEntity.ok("✅ Connexion réussie pour : " + userDetails.getUsername());
+
+            // ✅ Retourner une réponse JSON propre
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Connexion réussie");
+            response.put("user", userDetails.getUsername());
+            response.put("roles", userDetails.getAuthorities());
+
+            return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
             System.err.println("❌ Identifiants invalides");
-            return ResponseEntity.status(401).body("❌ Identifiants invalides");
+            return ResponseEntity
+                    .status(401)
+                    .body(Map.of("error", "Identifiants invalides"));
         } catch (Exception e) {
-            e.printStackTrace(); // ← IMPORTANT pour voir l’exception complète
-            return ResponseEntity.internalServerError().body("❌ Erreur interne : " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity
+                    .internalServerError()
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 
