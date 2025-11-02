@@ -1,6 +1,10 @@
 package jobplatform.comptes;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -14,6 +18,7 @@ public class AuthController {
 
     private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     /**
      * 🟢 Endpoint pour l'inscription d'un nouvel utilisateur
@@ -35,20 +40,30 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Account account) {
         try {
             System.out.println("🔍 Tentative de login : " + account.getEmail());
+            
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
+                new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             System.out.println("✅ Connexion réussie : " + userDetails.getUsername());
-            return ResponseEntity.ok("✅ Connexion réussie pour : " + userDetails.getUsername());
+
+            // 🔐 Générer un JWT (exemple)
+            String token = jwtService.generateToken(userDetails.getUsername());
+
+            // ⚙️ Construire la réponse JSON
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("user", userDetails);
+
+            return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
             System.err.println("❌ Identifiants invalides");
-            return ResponseEntity.status(401).body("❌ Identifiants invalides");
+            return ResponseEntity.status(401).body(Map.of("error", "Identifiants invalides"));
         } catch (Exception e) {
-            e.printStackTrace(); // ← IMPORTANT pour voir l’exception complète
-            return ResponseEntity.internalServerError().body("❌ Erreur interne : " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
         }
     }
 
