@@ -1,15 +1,14 @@
 package jobplatform.comptes;
 
 import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,9 +26,11 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody Account account) {
         try {
             accountService.register(account);
-            return ResponseEntity.ok("✅ Utilisateur enregistré avec succès !");
+            return ResponseEntity.ok(Map.of("message", "✅ Utilisateur enregistré avec succès !"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("❌ Erreur lors de l'enregistrement : " + e.getMessage());
+            return ResponseEntity
+                    .badRequest()
+                    .body(Map.of("error", "❌ Erreur lors de l'enregistrement : " + e.getMessage()));
         }
     }
 
@@ -40,54 +41,40 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Account account) {
         try {
             System.out.println("🔍 Tentative de login : " + account.getEmail());
-<<<<<<< HEAD
-            
-=======
 
->>>>>>> 3f85aa5b64f6b7d3d2a43a07253b474ca1acbeff
+            // 🔐 Authentification
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
+                    new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             System.out.println("✅ Connexion réussie : " + userDetails.getUsername());
 
-<<<<<<< HEAD
-            // 🔐 Générer un JWT (exemple)
+            // 🔑 Génération du token JWT
             String token = jwtService.generateToken(userDetails.getUsername());
+            // 🧩 Extraction du rôle simplifié
+            String fullRole = userDetails.getAuthorities().iterator().next().getAuthority();
+            String simpleRole = fullRole.replace("ROLE_", "").toLowerCase();
 
-            // ⚙️ Construire la réponse JSON
+            // 🧱 Construction de la réponse JSON
             Map<String, Object> response = new HashMap<>();
-            response.put("token", token);
-            response.put("user", userDetails);
-=======
-            // ✅ Retourner une réponse JSON propre
-            Map<String, Object> response = new HashMap<>();
-            response.put("message", "Connexion réussie");
+            response.put("message", "✅ Connexion réussie");
             response.put("user", userDetails.getUsername());
-            response.put("roles", userDetails.getAuthorities());
->>>>>>> 3f85aa5b64f6b7d3d2a43a07253b474ca1acbeff
+            response.put("roles", simpleRole);
+            response.put("token", token);
 
             return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
             System.err.println("❌ Identifiants invalides");
-<<<<<<< HEAD
-            return ResponseEntity.status(401).body(Map.of("error", "Identifiants invalides"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
-=======
             return ResponseEntity
                     .status(401)
-                    .body(Map.of("error", "Identifiants invalides"));
+                    .body(Map.of("error", "❌ Identifiants invalides"));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity
                     .internalServerError()
-                    .body(Map.of("error", e.getMessage()));
->>>>>>> 3f85aa5b64f6b7d3d2a43a07253b474ca1acbeff
+                    .body(Map.of("error", "❌ Erreur interne : " + e.getMessage()));
         }
     }
-
 }
