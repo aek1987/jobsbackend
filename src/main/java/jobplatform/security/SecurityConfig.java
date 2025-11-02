@@ -43,14 +43,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable()) // désactive CSRF pour les API REST
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 🔥 Active la config CORS ci-dessous
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll() // endpoints publics
-                .anyRequest().authenticated() // le reste est protégé
+                .anyRequest().authenticated()
             )
-            .formLogin(login -> login.permitAll()); // optionnel, utile si tu veux tester via navigateur
+            .formLogin(form -> form.disable()) // <- désactive complètement la page login HTML
+            .httpBasic(basic -> basic.disable()); // <- désactive Basic Auth (optionnel)
         return http.build();
     }
+
 
     // ✅ Configuration CORS — c’est ce qui résout ton problème
     @Bean
