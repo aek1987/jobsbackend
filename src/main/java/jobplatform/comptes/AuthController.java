@@ -1,6 +1,7 @@
 package jobplatform.comptes;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -21,62 +22,55 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    /**
-     * 🟢 Endpoint pour l'inscription d'un nouvel utilisateur
-     */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Account account) {
+    public ResponseEntity<Map<String, Object>> register(@RequestBody Account account) {
+        Map<String, Object> response = new HashMap<>();
         try {
             accountService.register(account);
-            return ResponseEntity.ok(Map.of("message", "✅ Utilisateur enregistré avec succès !"));
+            response.put("message", "✅ Utilisateur enregistré avec succès !");
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(Map.of("error", "❌ Erreur lors de l'enregistrement : " + e.getMessage()));
+            response.put("error", "❌ Erreur lors de l'enregistrement : " + e.getMessage());
+            return ResponseEntity.badRequest()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         }
     }
 
-    /**
-     * 🟢 Endpoint pour la connexion d'un utilisateur
-     */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Account account) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Account account) {
+        Map<String, Object> response = new HashMap<>();
         try {
-            System.out.println("🔍 Tentative de login : " + account.getEmail());
-
-            // 🔐 Authentification
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
             );
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            System.out.println("✅ Connexion réussie : " + userDetails.getUsername());
-
-            // 🔑 Génération du token JWT
             String token = jwtService.generateToken(userDetails.getUsername());
-            // 🧩 Extraction du rôle simplifié
-            String fullRole = userDetails.getAuthorities().iterator().next().getAuthority();
-            String simpleRole = fullRole.replace("ROLE_", "").toLowerCase();
+            String role = userDetails.getAuthorities().iterator().next().getAuthority()
+                    .replace("ROLE_", "").toLowerCase();
 
-            // 🧱 Construction de la réponse JSON
-            Map<String, Object> response = new HashMap<>();
             response.put("message", "✅ Connexion réussie");
             response.put("user", userDetails.getUsername());
-            response.put("roles", simpleRole);
+            response.put("roles", role);
             response.put("token", token);
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
 
         } catch (BadCredentialsException e) {
-            System.err.println("❌ Identifiants invalides");
-            return ResponseEntity
-                    .status(401)
-                    .body(Map.of("error", "❌ Identifiants invalides"));
+            response.put("error", "Identifiants invalides");
+            return ResponseEntity.status(401)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity
-                    .internalServerError()
-                    .body(Map.of("error", "❌ Erreur interne : " + e.getMessage()));
+            response.put("error", "Erreur interne : " + e.getMessage());
+            return ResponseEntity.status(500)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(response);
         }
     }
 }
