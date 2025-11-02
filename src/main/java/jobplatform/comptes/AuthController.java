@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import jobplatform.security.JwtService;
+
 import java.util.HashMap;
 import java.util.Map;
 
