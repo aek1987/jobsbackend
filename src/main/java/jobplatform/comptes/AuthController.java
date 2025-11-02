@@ -40,7 +40,11 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody Account account) {
         try {
             System.out.println("🔍 Tentative de login : " + account.getEmail());
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 3f85aa5b64f6b7d3d2a43a07253b474ca1acbeff
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
             );
@@ -48,6 +52,7 @@ public class AuthController {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             System.out.println("✅ Connexion réussie : " + userDetails.getUsername());
 
+<<<<<<< HEAD
             // 🔐 Générer un JWT (exemple)
             String token = jwtService.generateToken(userDetails.getUsername());
 
@@ -55,15 +60,33 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("user", userDetails);
+=======
+            // ✅ Retourner une réponse JSON propre
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Connexion réussie");
+            response.put("user", userDetails.getUsername());
+            response.put("roles", userDetails.getAuthorities());
+>>>>>>> 3f85aa5b64f6b7d3d2a43a07253b474ca1acbeff
 
             return ResponseEntity.ok(response);
 
         } catch (BadCredentialsException e) {
             System.err.println("❌ Identifiants invalides");
+<<<<<<< HEAD
             return ResponseEntity.status(401).body(Map.of("error", "Identifiants invalides"));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
+=======
+            return ResponseEntity
+                    .status(401)
+                    .body(Map.of("error", "Identifiants invalides"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity
+                    .internalServerError()
+                    .body(Map.of("error", e.getMessage()));
+>>>>>>> 3f85aa5b64f6b7d3d2a43a07253b474ca1acbeff
         }
     }
 

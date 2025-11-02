@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/offres")
-@CrossOrigin(origins = "*") // adjust origins in production
+
 public class OffreController {
 
     private final OffreService offreService;
