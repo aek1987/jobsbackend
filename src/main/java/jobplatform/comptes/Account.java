@@ -4,12 +4,19 @@ package jobplatform.comptes;
 	import jakarta.persistence.*;
 	import lombok.*;
 
+	
+	@Entity
+	@Table(name = "account")
+	
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
 	@Builder
 	public class Account {
-	    private Long id;
+	    
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
 	    private String email;
 	    private String password;
 	    private String username;
