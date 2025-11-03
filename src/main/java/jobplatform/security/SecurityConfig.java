@@ -45,9 +45,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // désactive CSRF pour les API REST
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll() // endpoints publics
-                .anyRequest().authenticated()
-            )
+            	    .requestMatchers(
+            	        "/api/auth/**",    // login / register publics
+            	        "/api/offres/**"   // ✅ les offres sont publiques
+            	    ).permitAll()
+            	    .anyRequest().authenticated()
+            	)
+
             .formLogin(form -> form.disable()) // <- désactive complètement la page login HTML
             .httpBasic(basic -> basic.disable()); // <- désactive Basic Auth (optionnel)
         return http.build();
