@@ -47,15 +47,18 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
             );
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            String token = jwtService.generateToken(userDetails.getUsername());
-            String role = userDetails.getAuthorities().iterator().next().getAuthority()
-                    .replace("ROLE_", "").toLowerCase();
+            Account user = (Account) authentication.getPrincipal();
+            String token = jwtService.generateToken(user.getEmail());           
 
-            response.put("message", "✅ Connexion réussie");
-            response.put("user", userDetails.getUsername());
-            response.put("roles", role);
+              
+          
+            response.put("message", "Connexion réussie");               
+            response.put("email", user.getEmail());
+            response.put("username", user.getUsername());
+            response.put("role", user.getRole());
+            response.put("refId", user.getRefId());
             response.put("token", token);
+            
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)

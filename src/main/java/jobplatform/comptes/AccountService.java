@@ -35,11 +35,7 @@ public class AccountService implements UserDetailsService {
             throw new UsernameNotFoundException("Utilisateur non trouvé : " + email);
         }
 
-        return User.builder()
-                .username(account.getEmail())
-                .password(account.getPassword())
-                .roles(account.getRole()) // ROLE_CANDIDAT, ROLE_ENTREPRISE, etc.
-                .build();
+        return account; 
     }
 
     /**
@@ -50,12 +46,12 @@ public class AccountService implements UserDetailsService {
     @Transactional
     public void register(Account account) {
         if (account == null || account.getEmail() == null || account.getPassword() == null) {
-            throw new IllegalArgumentException("⚠️ Email et mot de passe sont obligatoires.");
+            throw new IllegalArgumentException(" Email et mot de passe sont obligatoires.");
         }
 
         // Vérifier si l’email existe déjà
         if (accountMapper.findByEmail(account.getEmail()) != null) {
-            throw new IllegalStateException("🚫 Cet email est déjà utilisé : " + account.getEmail());
+            throw new IllegalStateException(" Cet email est déjà utilisé : " + account.getEmail());
         }
 
         // Encodage du mot de passe
@@ -87,7 +83,7 @@ public class AccountService implements UserDetailsService {
                 break;
 
             default:
-                throw new IllegalArgumentException("⚠️ Rôle non reconnu : " + role);
+                throw new IllegalArgumentException("⚠ Rôle non reconnu : " + role);
         }
 
         // Enregistrer le compte
