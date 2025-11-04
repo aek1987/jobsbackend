@@ -7,13 +7,14 @@ package jobplatform.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+@Entity
+@Table(name = "entreprise")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "entreprise")
+
+
 public class Entreprise {
 
     @Id
