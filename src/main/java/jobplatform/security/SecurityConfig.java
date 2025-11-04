@@ -45,15 +45,12 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // désactive CSRF pour les API REST
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers(
-            	        "/api/auth/**",    // login / register publics
-            	        "/api/offres/**" ,  // ✅ les offres sont publiques
-            	        "/api/entreprises/**", // ✅ entreprises (lecture)
-                        "/api/candidats/**"    // (si tu veux autoriser la lecture des candidats aussi)
-            	    ).permitAll()
-            	    
-            	    .anyRequest().authenticated()
-            	)
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/offres/**").permitAll()
+                    .requestMatchers("/api/entreprises/**").permitAll()  // ✅ accès public
+                    .requestMatchers("/api/candidats/**").permitAll()
+                    .anyRequest().permitAll()  // ✅ pour l’instant, tout est public
+                )
 
             .formLogin(form -> form.disable()) // <- désactive complètement la page login HTML
             .httpBasic(basic -> basic.disable()); // <- désactive Basic Auth (optionnel)
@@ -69,7 +66,8 @@ public class SecurityConfig {
         // 🌍 Autorise ton front local et ton front déployé (si applicable)
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:4200",           // ton front Angular local
-                "https://jobsfrontend.onrender.com" // <-- remplace si ton front Render a une autre URL
+                "https://jobsfrontend.onrender.com", // <-- remplace si ton front Render a une autre URL
+                "https://aek1987.github.io/annances/"
         ));
 
         // 🔧 Méthodes et en-têtes autorisés
