@@ -67,7 +67,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:4200",           // ton front Angular local
                 "https://jobsfrontend.onrender.com", // <-- remplace si ton front Render a une autre URL
-                "https://aek1987.github.io/annances/"
+                "https://aek1987.github.io/annances"
         ));
 
         // 🔧 Méthodes et en-têtes autorisés
