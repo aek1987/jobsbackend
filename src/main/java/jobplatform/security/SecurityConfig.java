@@ -47,8 +47,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
             	    .requestMatchers(
             	        "/api/auth/**",    // login / register publics
-            	        "/api/offres/**"   // ✅ les offres sont publiques
+            	        "/api/offres/**" ,  // ✅ les offres sont publiques
+            	        "/api/entreprises/**", // ✅ entreprises (lecture)
+                        "/api/candidats/**"    // (si tu veux autoriser la lecture des candidats aussi)
             	    ).permitAll()
+            	    
             	    .anyRequest().authenticated()
             	)
 
