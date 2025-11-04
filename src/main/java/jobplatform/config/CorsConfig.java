@@ -15,7 +15,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")  // toutes les routes
-                .allowedOrigins(
+                .allowedOriginPatterns(
                         "http://localhost:4200", // dev local
                         "https://aek1987.github.io/annances" // front GitHub Pages
                     ) // ou "http://localhost:4200" en dev
