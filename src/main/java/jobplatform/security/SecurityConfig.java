@@ -63,14 +63,13 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // 🌍 Autorise ton front local et ton front déployé (si applicable)
-        configuration.setAllowedOrigins(List.of(
-                "http://localhost:4200",           // ton front Angular local
-                "https://jobsfrontend.onrender.com", // <-- remplace si ton front Render a une autre URL
-                "https://aek1987.github.io/annances"
+        // Autoriser local et front distant avec pattern
+        configuration.setAllowedOriginPatterns(List.of(
+                "http://localhost:4200",
+                "https://*.onrender.com",
+                "https://*.github.io"
         ));
 
-        // 🔧 Méthodes et en-têtes autorisés
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -79,4 +78,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
