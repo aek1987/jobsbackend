@@ -18,7 +18,8 @@ public class Offre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
+    @Column(name = "\"entrepriseId\"")
     private Long entrepriseId;
     private String poste;
     private String description;

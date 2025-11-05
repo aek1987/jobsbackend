@@ -39,4 +39,30 @@ public interface EntrepriseMapper {
     // 🔹 Liste complète
     @Select("SELECT * FROM entreprise")
     List<Entreprise> findAll();
+    // 🔹 ✅ Filtrage dynamique
+    @Select("""
+        <script>
+        SELECT * FROM entreprise
+        WHERE 1=1
+        <if test="secteur != null and secteur != ''">
+            AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
+        </if>
+        <if test="status != null and status != ''">
+            AND LOWER(status) = LOWER(#{status})
+        </if>
+        <if test="email != null and email != ''">
+            AND LOWER(email) LIKE LOWER(CONCAT('%', #{email}, '%'))
+        </if>
+        <if test="username != null and username != ''">
+            AND LOWER(username) LIKE LOWER(CONCAT('%', #{username}, '%'))
+        </if>
+        ORDER BY id DESC
+        </script>
+    """)
+    List<Entreprise> filterEntreprises(
+            @Param("secteur") String secteur,
+            @Param("status") String status,
+            @Param("email") String email,
+            @Param("username") String username
+    );
 }

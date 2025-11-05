@@ -28,22 +28,32 @@ public class OffreController {
     public List<Offre> getAll() {
         return offreService.getAll();
     }
-    @GetMapping("/paged")
-    public ResponseEntity<Page<OffreDTO>> getAllPaged(
+    
+    
+    @GetMapping("/filter")
+    public ResponseEntity<Page<Offre>> filterOffres(
+            @RequestParam(required = false) String secteur,
+            @RequestParam(required = false) String contrat,
+            @RequestParam(required = false) String localisation,
+            @RequestParam(required = false) Double salaireMin,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size,
-            @RequestParam(defaultValue = "datePublication") String sortBy,
+            @RequestParam(defaultValue = "date_publication") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir
     ) {
-        size = Math.min(size, 50);
-        page = Math.max(page, 0);
+        Sort sort = sortDir.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
-        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        PageRequest pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, Math.min(size, 50), sort);
+        Page<Offre> offres = offreService.filterOffres(secteur, contrat, localisation, salaireMin, pageable);
 
-        Page<OffreDTO> offres = offreService.getAllPagedDTO(pageable);
         return ResponseEntity.ok(offres);
     }
+
+ 
+    
+    
     @GetMapping("/{id}")
     public ResponseEntity<Offre> getById(@PathVariable Long id) {
         return offreService.getById(id)
@@ -51,25 +61,29 @@ public class OffreController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<Offre> create(@RequestBody Offre offre) {
-        Offre saved = offreService.save(offre);
-        return ResponseEntity.status(201).body(saved);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Offre> update(@PathVariable Long id, @RequestBody Offre updated) {
-        return offreService.getById(id)
-                .map(existing -> {
-                    updated.setId(id);
-                    return ResponseEntity.ok(offreService.save(updated));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
+  
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         offreService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @GetMapping("/paged")
+    public ResponseEntity<Page<Offre>> getPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "datePublication") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+    ) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Offre> offres = offreService.getAllPaged(pageable);
+        return ResponseEntity.ok(offres);
+    }
+
+    
+    
+    
+    
 }

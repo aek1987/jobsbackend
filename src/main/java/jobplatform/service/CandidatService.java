@@ -33,4 +33,8 @@ public class CandidatService {
     public void delete(Long id) {
         candidatRepository.deleteById(id);
     }
+    // ✅ Ajout : récupération par email
+    public Optional<Candidat> getByEmail(String email) {
+        return candidatRepository.findByEmail(email);
+    }
 }

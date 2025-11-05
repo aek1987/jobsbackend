@@ -29,6 +29,15 @@ public class CandidatController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    // 🔹 Récupérer un candidat par email
+    // 🔹 Récupérer un candidat par email
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity<Candidat> getCandidatByEmail(@PathVariable String email) {
+        return candidatService.getByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 
     @PostMapping
     public ResponseEntity<Candidat> create(@RequestBody Candidat candidat) {
