@@ -1,6 +1,7 @@
 package jobplatform.controller;
 
 import jobplatform.model.Candidat;
+import jobplatform.model.Offre;
 import jobplatform.service.CandidatService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,4 +61,19 @@ public class CandidatController {
         candidatService.delete(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/{id}/favoris")
+    public List<Offre> getFavoris(@PathVariable Long id) {
+        return candidatService.getFavoris(id);
+    }
+
+    @PostMapping("/{id}/favoris/{offreId}")
+    public void addFavori(@PathVariable Long id, @PathVariable Long offreId) {
+        candidatService.addFavori(id, offreId);
+    }
+
+    @DeleteMapping("/{id}/favoris/{offreId}")
+    public void removeFavori(@PathVariable Long id, @PathVariable Long offreId) {
+        candidatService.removeFavori(id, offreId);
+    }
+    
 }

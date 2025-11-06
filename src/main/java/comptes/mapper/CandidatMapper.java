@@ -6,10 +6,12 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import jobplatform.model.Candidat;
+import jobplatform.model.Offre;
 
 @Mapper
 public interface CandidatMapper {
@@ -43,4 +45,28 @@ public interface CandidatMapper {
     // 🔹 Liste complète (utile pour l’admin)
     @Select("SELECT * FROM candidat")
     List<Candidat> findAll();
+    
+
+    // 🔹 Récupérer les favoris d’un candidat
+    @Select("""
+        SELECT o.* FROM offre o
+        JOIN candidat_favoris cf ON o.id = cf.offre_id
+        WHERE cf.candidat_id = #{candidatId}
+    """)
+    List<Offre> getFavoris(@Param("candidatId") Long candidatId);
+
+    // 🔹 Ajouter une offre dans les favoris
+    @Insert("""
+        INSERT INTO candidat_favoris (candidat_id, offre_id)
+        VALUES (#{candidatId}, #{offreId})
+    """)
+    void addFavori(@Param("candidatId") Long candidatId, @Param("offreId") Long offreId);
+
+    // 🔹 Supprimer une offre des favoris
+    @Delete("""
+        DELETE FROM candidat_favoris
+        WHERE candidat_id = #{candidatId} AND offre_id = #{offreId}
+    """)
+    void removeFavori(@Param("candidatId") Long candidatId, @Param("offreId") Long offreId);
+    
 }

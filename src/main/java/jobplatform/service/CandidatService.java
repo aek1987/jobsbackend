@@ -3,8 +3,11 @@ package jobplatform.service;
 
 
 import jobplatform.model.Candidat;
+import jobplatform.model.Offre;
 import jobplatform.repository.CandidatRepository;
 import org.springframework.stereotype.Service;
+
+import comptes.mapper.CandidatMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,11 @@ import java.util.Optional;
 public class CandidatService {
 
     private final CandidatRepository candidatRepository;
+    private final CandidatMapper candidatMapper;
 
-    public CandidatService(CandidatRepository candidatRepository) {
+    public CandidatService(CandidatRepository candidatRepository,CandidatMapper candidatMapper) {
         this.candidatRepository = candidatRepository;
+        this.candidatMapper = candidatMapper;
     }
 
     public List<Candidat> getAll() {
@@ -37,4 +42,17 @@ public class CandidatService {
     public Optional<Candidat> getByEmail(String email) {
         return candidatRepository.findByEmail(email);
     }
+    
+    public List<Offre> getFavoris(Long candidatId) {
+        return candidatMapper.getFavoris(candidatId);
+    }
+
+    public void addFavori(Long candidatId, Long offreId) {
+        candidatMapper.addFavori(candidatId, offreId);
+    }
+
+    public void removeFavori(Long candidatId, Long offreId) {
+        candidatMapper.removeFavori(candidatId, offreId);
+    } 
+    
 }
