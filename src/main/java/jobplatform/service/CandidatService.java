@@ -46,10 +46,12 @@ public class CandidatService {
     public List<Offre> getFavoris(Long candidatId) {
         return candidatMapper.getFavoris(candidatId);
     }
-
     public void addFavori(Long candidatId, Long offreId) {
-        candidatMapper.addFavori(candidatId, offreId);
+        if (candidatMapper.existsFavori(candidatId, offreId) == 0) {
+            candidatMapper.addFavori(candidatId, offreId);
+        }
     }
+
 
     public void removeFavori(Long candidatId, Long offreId) {
         candidatMapper.removeFavori(candidatId, offreId);

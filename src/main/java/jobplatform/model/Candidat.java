@@ -17,7 +17,7 @@ public class Candidat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long refId;
 
     private String username;
     private String email;
@@ -32,7 +32,12 @@ public class Candidat {
     private Integer progression;
 
     @ElementCollection
-    private List<Long> favoris; // ids des offres favorites
+    @CollectionTable(
+        name = "candidat_favoris",
+        joinColumns = @JoinColumn(name = "candidat_id")
+    )
+    @Column(name = "offre_id")
+     private List<Long> favoris; // ids des offres favorites
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Experience> experiences;

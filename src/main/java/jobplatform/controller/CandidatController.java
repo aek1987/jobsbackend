@@ -47,10 +47,10 @@ public class CandidatController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Candidat> update(@PathVariable Long id, @RequestBody Candidat updated) {
-        return candidatService.getById(id)
+    public ResponseEntity<Candidat> update(@PathVariable Long refId, @RequestBody Candidat updated) {
+        return candidatService.getById(refId)
                 .map(existing -> {
-                    updated.setId(id);
+                    updated.setRefId(refId);
                     return ResponseEntity.ok(candidatService.save(updated));
                 })
                 .orElse(ResponseEntity.notFound().build());

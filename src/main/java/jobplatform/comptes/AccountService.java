@@ -69,7 +69,7 @@ public class AccountService implements UserDetailsService {
                         .status("incomplet")
                         .build();
                 candidatMapper.insert(candidat);
-                refId = candidat.getId();
+                refId = candidat.getRefId();
                 break;
 
             case "entreprise":

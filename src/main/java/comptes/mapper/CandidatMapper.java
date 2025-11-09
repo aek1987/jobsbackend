@@ -55,7 +55,16 @@ public interface CandidatMapper {
     """)
     List<Offre> getFavoris(@Param("candidatId") Long candidatId);
 
+    
+    
+    
     // 🔹 Ajouter une offre dans les favoris
+    @Select("""
+    	    SELECT COUNT(*) FROM candidat_favoris
+    	    WHERE candidat_id = #{candidatId} AND offre_id = #{offreId}
+    	""")
+    	int existsFavori(@Param("candidatId") Long candidatId, @Param("offreId") Long offreId);
+
     @Insert("""
         INSERT INTO candidat_favoris (candidat_id, offre_id)
         VALUES (#{candidatId}, #{offreId})
