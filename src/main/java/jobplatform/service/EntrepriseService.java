@@ -33,4 +33,9 @@ public class EntrepriseService {
     public void delete(Long id) {
         entrepriseRepository.deleteById(id);
     }
+    
+    public Optional<Entreprise> getByEmail(String email) {
+        return entrepriseRepository.findByEmail(email);
+    }
+
 }

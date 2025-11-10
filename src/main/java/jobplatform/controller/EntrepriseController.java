@@ -38,6 +38,14 @@ public class EntrepriseController {
         return ResponseEntity.status(201).body(saved);
     }
 
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity<Entreprise> getByEmail(@PathVariable String email) {
+        return entrepriseService.getByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }   
+    
+    
     @PutMapping("/{id}")
     public ResponseEntity<Entreprise> update(@PathVariable Long id, @RequestBody Entreprise updated) {
         return entrepriseService.getById(id)

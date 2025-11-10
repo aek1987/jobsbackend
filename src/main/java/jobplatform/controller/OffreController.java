@@ -82,7 +82,12 @@ public class OffreController {
         return ResponseEntity.ok(offres);
     }
 
-    
+    @PostMapping
+    public ResponseEntity<Offre> create(@RequestBody Offre offre) {
+        Offre saved = offreService.save(offre);
+        return ResponseEntity.status(201).body(saved);
+    }
+ 
     
     
     

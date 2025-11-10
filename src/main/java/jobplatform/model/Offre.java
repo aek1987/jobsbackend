@@ -18,19 +18,22 @@ public class Offre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "\"entrepriseId\"")
-    private Long entrepriseId;
+
     private String poste;
     private String description;
     private String localisation;
     private Double salaire;
     private String contrat;
     private String teletravail;
-    private String niveauExperience;
+  
     private String avantages;
-    private String status;
+    private String status; 
+    private String secteur;
+    @Column(name = "entreprise_id")
+    private Long entrepriseId;
 
+    @Column(name = "niveau_experience")
+    private String niveauExperience;
     private LocalDate datePublication;
     private LocalDate dateLimite;
 

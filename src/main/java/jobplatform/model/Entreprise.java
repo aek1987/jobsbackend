@@ -22,6 +22,7 @@ public class Entreprise {
     private Long id;
 
     private String username;
+    @Column(nullable = false, unique = true)
     private String email;
     private String phone;
     private String secteur;
