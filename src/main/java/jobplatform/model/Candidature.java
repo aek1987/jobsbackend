@@ -18,7 +18,7 @@ public class Candidature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "offre_id", nullable = false)
     private Offre offre;
 
