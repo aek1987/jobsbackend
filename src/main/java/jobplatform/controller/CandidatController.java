@@ -3,6 +3,8 @@ package jobplatform.controller;
 import jobplatform.model.Candidat;
 import jobplatform.model.Offre;
 import jobplatform.service.CandidatService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,13 +69,32 @@ public class CandidatController {
     }
 
     @PostMapping("/{id}/favoris/{offreId}")
-    public void addFavori(@PathVariable Long id, @PathVariable Long offreId) {
-        candidatService.addFavori(id, offreId);
+    public ResponseEntity<Void> addFavori(@PathVariable Long id, @PathVariable Long offreId) {
+        boolean added = candidatService.addFavori(id, offreId);
+        if (added) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 si déjà existant
+        }
     }
+
 
     @DeleteMapping("/{id}/favoris/{offreId}")
     public void removeFavori(@PathVariable Long id, @PathVariable Long offreId) {
         candidatService.removeFavori(id, offreId);
     }
-    
+ // Vérifie si une offre est favorite pour un candidat
+    @GetMapping("/{id}/favoris/{offreId}/isFavorite")
+    public ResponseEntity<Boolean> isFavori(
+            @PathVariable Long id,
+            @PathVariable Long offreId) {
+
+        return candidatService.getById(id)
+                .map(candidat -> {
+                    boolean exists = candidat.getFavoris() != null && candidat.getFavoris().contains(offreId);
+                    return ResponseEntity.ok(exists);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }
