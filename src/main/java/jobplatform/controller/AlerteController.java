@@ -49,18 +49,5 @@ public class AlerteController {
         alerteService.deleteAlerte(id);
         return ResponseEntity.noContent().build();
     }
-    @PostMapping
-    public ResponseEntity<?> createAlerte1(@RequestBody Alerte alerte) {
-        // Vérifier le nombre d'alertes pour cet email
-        long count = alerteService.countAlertesByEmail(alerte.getEmail());
-
-        if (count >= 3) {
-            return ResponseEntity
-                    .badRequest()
-                    .body("Nombre maximal d'alertes atteint (3) pour cet email");
-        }
-
-        return ResponseEntity.ok(alerteService.addAlerte(alerte));
-    }
-
+  
 }
