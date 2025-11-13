@@ -10,4 +10,6 @@ import jobplatform.model.Alerte;
 
 @Repository
 public interface AlerteRepository extends JpaRepository<Alerte, Long> {
+	
+	 long countByEmail(String email);  // compter les alertes par email
 }
