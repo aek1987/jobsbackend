@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import DTO.AccountDTO;
+
 @Service
 public class AccountService implements UserDetailsService {
 
@@ -43,54 +45,53 @@ public class AccountService implements UserDetailsService {
      * Si rôle = candidat => crée un candidat vide
      * Si rôle = entreprise => crée une entreprise vide
      */
-    @Transactional
-    public void register(Account account) {
-        if (account == null || account.getEmail() == null || account.getPassword() == null) {
-            throw new IllegalArgumentException(" Email et mot de passe sont obligatoires.");
-        }
-
-        // Vérifier si l’email existe déjà
-        if (accountMapper.findByEmail(account.getEmail()) != null) {
-            throw new IllegalStateException(" Cet email est déjà utilisé : " + account.getEmail());
-        }
-
-        // Encodage du mot de passe
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-
-        // Déterminer le rôle
-        String role = account.getRole() == null ? "candidat" : account.getRole().toLowerCase();
-
-        Long refId = null;
-        switch (role) {
-            case "candidat":
-                Candidat candidat = Candidat.builder()
-                        .email(account.getEmail())
-                        .username(account.getUsername())
-                        .status("incomplet")
-                        .build();
-                candidatMapper.insert(candidat);
-                refId = candidat.getRefId();
-                break;
-
-            case "entreprise":
-                Entreprise entreprise = Entreprise.builder()
-                        .email(account.getEmail())
-                        .username(account.getUsername())
-                        .status("incomplet")
-                        .build();
-                entrepriseMapper.insert(entreprise);
-                refId = entreprise.getId();
-                break;
-
-            default:
-                throw new IllegalArgumentException("⚠ Rôle non reconnu : " + role);
-        }
-
-        // Enregistrer le compte
-        account.setRole(role);
-        account.setRefId(refId);
-        accountMapper.insert(account);
-
-        System.out.println("✅ Compte " + role + " créé : " + account.getEmail());
+@Transactional
+public AccountDTO register(Account account) {
+    if (account == null || account.getEmail() == null || account.getPassword() == null) {
+        throw new IllegalArgumentException("Email et mot de passe sont obligatoires.");
     }
+
+    if (accountMapper.findByEmail(account.getEmail()) != null) {
+        throw new IllegalStateException("Cet email est déjà utilisé : " + account.getEmail());
+    }
+
+    account.setPassword(passwordEncoder.encode(account.getPassword()));
+
+    String role = account.getRole() == null ? "candidat" : account.getRole().toLowerCase();
+    Long refId = null;
+
+    switch (role) {
+        case "candidat":
+            Candidat candidat = Candidat.builder()
+                    .email(account.getEmail())
+                    .username(account.getUsername())
+                    .status("incomplet")
+                    .build();
+            candidatMapper.insert(candidat);
+            refId = candidat.getRefId();
+            break;
+
+        case "entreprise":
+            Entreprise entreprise = Entreprise.builder()
+                    .email(account.getEmail())
+                    .username(account.getUsername())
+                    .status("incomplet")
+                    .build();
+            entrepriseMapper.insert(entreprise);
+            refId = entreprise.getId();
+            break;
+
+        default:
+            throw new IllegalArgumentException("⚠ Rôle non reconnu : " + role);
+    }
+
+    account.setRole(role);
+    account.setRefId(refId);
+    
+    accountMapper.insert(account);
+
+    // Retourner un DTO
+    return new AccountDTO(refId, account.getEmail(), account.getUsername(), role);
+}
+
 }

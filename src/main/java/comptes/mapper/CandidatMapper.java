@@ -21,7 +21,7 @@ public interface CandidatMapper {
         INSERT INTO candidat (username, email, fonction, phone, bio, cv, adresse, status, progression)
         VALUES (#{username}, #{email}, #{fonction}, #{phone}, #{bio}, #{cv}, #{adresse}, #{status}, #{progression})
     """)
-    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Options(useGeneratedKeys = true, keyProperty = "refId")
     void insert(Candidat candidat);
 
     // 🔹 Récupération d’un candidat par ID

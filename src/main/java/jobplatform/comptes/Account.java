@@ -25,6 +25,7 @@ public class Account implements UserDetails {
     private String password;
     private String username;
     private String role;
+    private String phone;
     private Long refId;
 
     @Override
