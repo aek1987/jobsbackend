@@ -36,7 +36,7 @@ public class CandidatureService {
         }
 
         Candidature candidature = Candidature.builder()
-                .offre(offre)
+                .offreId(offre.getId())
                 .candidat(candidat)
                 .dateCandidature(LocalDateTime.now())
                 .statut("en attente")

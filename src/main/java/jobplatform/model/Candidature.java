@@ -1,7 +1,5 @@
 package jobplatform.model;
 
-
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -18,9 +16,9 @@ public class Candidature {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "offre_id", nullable = false)
-    private Offre offre;
+    // 🔹 juste l'ID de l'offre, pas l'objet complet
+    @Column(name = "offre_id", nullable = false)
+    private Long offreId;
 
     @ManyToOne
     @JoinColumn(name = "candidat_id", nullable = false)
