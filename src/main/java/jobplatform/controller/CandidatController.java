@@ -47,16 +47,54 @@ public class CandidatController {
         Candidat saved = candidatService.save(candidat);
         return ResponseEntity.status(201).body(saved);
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<Candidat> update(@PathVariable Long refId, @RequestBody Candidat updated) {
-        return candidatService.getById(refId)
+    public ResponseEntity<Candidat> updateCandidat(
+            @PathVariable("id") Long id,
+            @RequestBody Candidat updated) {
+
+        return candidatService.getById(id)
                 .map(existing -> {
-                    updated.setRefId(refId);
-                    return ResponseEntity.ok(candidatService.save(updated));
+
+                    // 🔹 Champs simples
+                    if (updated.getUsername() != null) existing.setUsername(updated.getUsername());
+                    if (updated.getEmail() != null) existing.setEmail(updated.getEmail());
+                    if (updated.getFonction() != null) existing.setFonction(updated.getFonction());
+                    if (updated.getPhone() != null) existing.setPhone(updated.getPhone());
+                    if (updated.getBio() != null) existing.setBio(updated.getBio());
+                    if (updated.getCv() != null) existing.setCv(updated.getCv());
+                    if (updated.getAdresse() != null) existing.setAdresse(updated.getAdresse());
+
+                    // ⚠️ Status géré par ton système → n’écrase pas automatiquement
+                    if (updated.getStatus() != null) existing.setStatus(updated.getStatus());
+
+                    // 🔹 Progression (calcul côté front ? côté back ?)
+                    if (updated.getProgression() != null) existing.setProgression(updated.getProgression());
+
+                    // 🔹 Listes (remplacement complet si envoyées)
+                    if (updated.getCompetences() != null) existing.setCompetences(updated.getCompetences());
+                    if (updated.getLangues() != null) existing.setLangues(updated.getLangues());
+                    // 🔹 Listes avec orphanRemoval
+                    if (updated.getExperiences() != null) {
+                        existing.getExperiences().clear();
+                        existing.getExperiences().addAll(updated.getExperiences());
+                    }
+
+                    if (updated.getFormations() != null) {
+                        existing.getFormations().clear();
+                        existing.getFormations().addAll(updated.getFormations());
+                    }
+
+                    // ⚠️ Favoris → ne doivent JAMAIS être écrasés par un update normal
+                    // Ils sont gérés par addFavori/removeFavori
+                    // Donc on les ignore ici.
+
+                    Candidat saved = candidatService.save(existing);
+                    return ResponseEntity.ok(saved);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

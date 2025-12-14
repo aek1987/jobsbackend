@@ -5,6 +5,9 @@ import comptes.mapper.CandidatMapper;
 import comptes.mapper.EntrepriseMapper;
 import jobplatform.model.Candidat;
 import jobplatform.model.Entreprise;
+
+import java.util.ArrayList;
+
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -61,29 +64,38 @@ public AccountDTO register(Account account) {
     Long refId = null;
 
     switch (role) {
-        case "candidat":
-            Candidat candidat = Candidat.builder()
-                    .email(account.getEmail())
-                    .username(account.getUsername())
-                    .status("incomplet")
-                    .build();
-            candidatMapper.insert(candidat);
-            refId = candidat.getRefId();
-            break;
+    case "candidat":
+    	 // Créer le candidat vide avec listes initialisées
+        Candidat candidat = Candidat.builder()
+            .email(account.getEmail())
+            .username(account.getUsername())
+            .status("incomplet")
+            .competences(new ArrayList<>())   // jamais null
+            .langues(new ArrayList<>())       // jamais null
+            .favoris(new ArrayList<>())       // jamais null
+            .experiences(new ArrayList<>())   // jamais null
+            .formations(new ArrayList<>())    // jamais null
+            .build();
 
-        case "entreprise":
-            Entreprise entreprise = Entreprise.builder()
-                    .email(account.getEmail())
-                    .username(account.getUsername())
-                    .status("incomplet")
-                    .build();
-            entrepriseMapper.insert(entreprise);
-            refId = entreprise.getId();
-            break;
+        candidatMapper.insert(candidat);   // ✅ un seul insert suffit
+        
+    
+        refId = candidat.getRefId();
+        break;
 
-        default:
-            throw new IllegalArgumentException("⚠ Rôle non reconnu : " + role);
-    }
+    case "entreprise":
+        Entreprise entreprise = Entreprise.builder()
+                .email(account.getEmail())
+                .username(account.getUsername())
+                .status("incomplet")
+                .build();
+        entrepriseMapper.insert(entreprise);
+        refId = entreprise.getId();
+        break;
+
+    default:
+        throw new IllegalArgumentException("⚠ Rôle non reconnu : " + role);
+}
 
     account.setRole(role);
     account.setRefId(refId);

@@ -78,4 +78,20 @@ public interface CandidatMapper {
     """)
     void removeFavori(@Param("candidatId") Long candidatId, @Param("offreId") Long offreId);
     
+    
+ // Insertion des compétences
+    @Insert("""
+        INSERT INTO candidat_competences (candidat_id, competence)
+        VALUES (#{candidatId}, #{competence})
+    """)
+    void insertCompetence(@Param("candidatId") Long candidatId, @Param("competence") String competence);
+
+    // Insertion des langues
+    @Insert("""
+        INSERT INTO candidat_langues (candidat_id, langue)
+        VALUES (#{candidatId}, #{langue})
+    """)
+    void insertLangue(@Param("candidatId") Long candidatId, @Param("langue") String langue);
+
+    
 }

@@ -5,6 +5,7 @@ package jobplatform.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,17 @@ public class Candidat {
     private String status; // active, desactive, en_attente_validation, incomplet, pret
 
     private Integer progression;
-
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "candidat_competences", joinColumns = @JoinColumn(name = "candidat_ref_id"))
+    @Column(name = "competence")
+    private List<String> competences = new ArrayList<>();
+    @Builder.Default
+    @ElementCollection
+    @CollectionTable(name = "candidat_langues", joinColumns = @JoinColumn(name = "candidat_ref_id"))
+    @Column(name = "langue")
+    private List<String> langues = new ArrayList<>();
+    
     @ElementCollection
     @CollectionTable(
         name = "candidat_favoris",
@@ -38,16 +49,16 @@ public class Candidat {
     )
     @Column(name = "offre_id")
      private List<Long> favoris; // ids des offres favorites
-
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Experience> experiences;
-
+    @JoinColumn(name = "candidat_ref_id") // ⚠ obligatoire pour lier les enfants à ce candidat
+    private List<Experience> experiences = new ArrayList<>();
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Formation> formations;
+    @JoinColumn(name = "candidat_ref_id")
+    private List<Formation> formations = new ArrayList<>(); 
+ 
+    
 
-    @ElementCollection
-    private List<String> competences;
-
-    @ElementCollection
-    private List<String> langues;
+ 
 }
