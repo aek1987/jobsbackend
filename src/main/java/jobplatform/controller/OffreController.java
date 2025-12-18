@@ -35,7 +35,9 @@ public class OffreController {
             @RequestParam(required = false) String secteur,
             @RequestParam(required = false) String contrat,
             @RequestParam(required = false) String localisation,
+            @RequestParam(required = false) String teletravail,
             @RequestParam(required = false) Double salaireMin,
+            @RequestParam(required = false) Double salaireMax,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size,
             @RequestParam(defaultValue = "date_publication") String sortBy,
@@ -46,7 +48,7 @@ public class OffreController {
                 : Sort.by(sortBy).descending();
 
         Pageable pageable = PageRequest.of(page, Math.min(size, 50), sort);
-        Page<Offre> offres = offreService.filterOffres(secteur, contrat, localisation, salaireMin, pageable);
+        Page<Offre> offres = offreService.filterOffres(secteur, contrat, localisation,teletravail, salaireMin, pageable);
 
         return ResponseEntity.ok(offres);
     }

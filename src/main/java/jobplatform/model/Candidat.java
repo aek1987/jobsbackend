@@ -26,6 +26,8 @@ public class Candidat {
     private String phone;
     private String bio;
     private String cv;
+    private String photo; // URL ou chemin du fichier
+
     private String adresse;
 
     private String status; // active, desactive, en_attente_validation, incomplet, pret

@@ -47,9 +47,9 @@ public class OffreService {
         return new PageImpl<>(offres, pageable, total);
     }
 
-    public Page<Offre> filterOffres(String secteur, String contrat, String localisation, Double salaireMin, Pageable pageable) {
+    public Page<Offre> filterOffres(String secteur, String contrat, String localisation,String teletravail, Double salaireMin, Pageable pageable) {
         int offset = pageable.getPageNumber() * pageable.getPageSize();
-        List<Offre> offres = offreMapper.filterOffres(secteur, contrat, localisation, salaireMin, pageable.getPageSize(), offset);
+        List<Offre> offres = offreMapper.filterOffres(secteur, contrat, localisation,teletravail, salaireMin, pageable.getPageSize(), offset);
         int total = offreMapper.countFiltered(secteur, contrat, localisation, salaireMin);
         return new PageImpl<>(offres, pageable, total);
     }

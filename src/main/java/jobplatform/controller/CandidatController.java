@@ -62,10 +62,14 @@ public class CandidatController {
                     if (updated.getPhone() != null) existing.setPhone(updated.getPhone());
                     if (updated.getBio() != null) existing.setBio(updated.getBio());
                     if (updated.getCv() != null) existing.setCv(updated.getCv());
+                    if (updated.getPhoto() != null) existing.setPhoto(updated.getPhoto());
+
                     if (updated.getAdresse() != null) existing.setAdresse(updated.getAdresse());
 
-                    // ⚠️ Status géré par ton système → n’écrase pas automatiquement
-                    if (updated.getStatus() != null) existing.setStatus(updated.getStatus());
+                    if (updated.getStatus() != null) {
+                        existing.setStatus(updated.getStatus());
+                    }
+
 
                     // 🔹 Progression (calcul côté front ? côté back ?)
                     if (updated.getProgression() != null) existing.setProgression(updated.getProgression());
@@ -94,6 +98,19 @@ public class CandidatController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Candidat> updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
+        return candidatService.getById(id)
+                .map(existing -> {
+                    existing.setStatus(status);  // Met à jour uniquement le status
+                    Candidat saved = candidatService.save(existing);
+                    return ResponseEntity.ok(saved);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
 
 
     @DeleteMapping("/{id}")

@@ -51,35 +51,76 @@ public interface OffreMapper {
     List<Offre> findAllPaged(@Param("limit") int limit, @Param("offset") int offset);
 
     @Select("""
-        SELECT * FROM offre 
-        WHERE (#{secteur} IS NULL OR LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%')))
-          AND (#{contrat} IS NULL OR LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%')))
-          AND (#{localisation} IS NULL OR LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%')))
-          AND (#{salaireMin} IS NULL OR salaire >= #{salaireMin})
-        ORDER BY date_publication DESC
-        LIMIT #{limit} OFFSET #{offset}
-    """)
-    List<Offre> filterOffres(
-        @Param("secteur") String secteur,
-        @Param("contrat") String contrat,
-        @Param("localisation") String localisation,
-        @Param("salaireMin") Double salaireMin,
-        @Param("limit") int limit,
-        @Param("offset") int offset
-    );
+    		<script>
+    		SELECT * FROM offre
+    		<where>
+
+    		  <if test="secteur != null and secteur != ''">
+    		    AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
+    		  </if>
+
+    		  <if test="contrat != null and contrat != ''">
+    		    AND LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%'))
+    		  </if>
+
+    		  <if test="localisation != null and localisation != ''">
+    		    AND LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%'))
+    		  </if>
+    		    <if test="teletravail != null and teletravail != ''">
+    		    AND LOWER(teletravail) LIKE LOWER(CONCAT('%', #{teletravail}, '%'))
+    		  </if>
+
+    		  <if test="salaireMin != null">
+    		    AND salaire &gt;= #{salaireMin}
+    		  </if>
+
+    		</where>
+    		ORDER BY date_publication DESC
+    		LIMIT #{limit} OFFSET #{offset}
+    		</script>
+    		""")
+  		List<Offre> filterOffres(
+    		    @Param("secteur") String secteur,
+    		    @Param("contrat") String contrat,
+    		    @Param("localisation") String localisation, 
+    		    @Param("teletravail") String teletravail,
+    		    @Param("salaireMin") Double salaireMin,
+    		  
+    		    @Param("limit") int limit,
+    		    @Param("offset") int offset
+    		);
+
 
     // 🆕 Ajout pour que la pagination filtrée fonctionne correctement :
     @Select("""
-        SELECT COUNT(*) FROM offre 
-        WHERE (#{secteur} IS NULL OR LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%')))
-          AND (#{contrat} IS NULL OR LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%')))
-          AND (#{localisation} IS NULL OR LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%')))
-          AND (#{salaireMin} IS NULL OR salaire >= #{salaireMin})
-    """)
-    int countFiltered(
-        @Param("secteur") String secteur,
-        @Param("contrat") String contrat,
-        @Param("localisation") String localisation,
-        @Param("salaireMin") Double salaireMin
-    );
+    		<script>
+    		SELECT COUNT(*) FROM offre
+    		<where>
+
+    		  <if test="secteur != null and secteur != ''">
+    		    AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
+    		  </if>
+
+    		  <if test="contrat != null and contrat != ''">
+    		    AND LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%'))
+    		  </if>
+
+    		  <if test="localisation != null and localisation != ''">
+    		    AND LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%'))
+    		  </if>
+
+    		  <if test="salaireMin != null">
+    		    AND salaire &gt;= #{salaireMin}
+    		  </if>
+
+    		</where>
+    		</script>
+    		""")
+    		int countFiltered(
+    		    @Param("secteur") String secteur,
+    		    @Param("contrat") String contrat,
+    		    @Param("localisation") String localisation,
+    		    @Param("salaireMin") Double salaireMin
+    		);
+
 }
