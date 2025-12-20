@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/entreprises")
@@ -50,8 +51,28 @@ public class EntrepriseController {
     public ResponseEntity<Entreprise> update(@PathVariable Long id, @RequestBody Entreprise updated) {
         return entrepriseService.getById(id)
                 .map(existing -> {
-                    updated.setId(id);
-                    return ResponseEntity.ok(entrepriseService.save(updated));
+                    existing.setUsername(updated.getUsername() != null ? updated.getUsername() : existing.getUsername());
+                    existing.setEmail(updated.getEmail() != null ? updated.getEmail() : existing.getEmail());
+                    existing.setPhone(updated.getPhone() != null ? updated.getPhone() : existing.getPhone());
+                    existing.setSecteur(updated.getSecteur() != null ? updated.getSecteur() : existing.getSecteur());
+                    existing.setDescription(updated.getDescription() != null ? updated.getDescription() : existing.getDescription());
+                    existing.setSite(updated.getSite() != null ? updated.getSite() : existing.getSite());
+                    existing.setStatus(updated.getStatus() != null ? updated.getStatus() : existing.getStatus());
+
+                    return ResponseEntity.ok(entrepriseService.save(existing));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Entreprise> updateStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+
+        return entrepriseService.getById(id)
+                .map(existing -> {
+                    existing.setStatus(body.get("status"));
+                    return ResponseEntity.ok(entrepriseService.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
