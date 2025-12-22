@@ -102,6 +102,7 @@ public class CandidatController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+<<<<<<< HEAD
 
     @PutMapping("/{id}/status")
     public ResponseEntity<Candidat> updateStatus(
@@ -113,14 +114,28 @@ public class CandidatController {
         if (status == null || status.isBlank()) {
             return ResponseEntity.badRequest().build();
         }
+=======
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Candidat> updateStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body
+    ) {
+        String status = body.get("status");
+>>>>>>> 848c8191fe312ca2161799b546ad0bcdeba08eec
 
         return candidatService.getById(id)
                 .map(existing -> {
                     existing.setStatus(status);
+<<<<<<< HEAD
                     return ResponseEntity.ok(candidatService.save(existing));
+=======
+                    Candidat saved = candidatService.save(existing);
+                    return ResponseEntity.ok(saved);
+>>>>>>> 848c8191fe312ca2161799b546ad0bcdeba08eec
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
 
 
     @DeleteMapping("/{id}")
