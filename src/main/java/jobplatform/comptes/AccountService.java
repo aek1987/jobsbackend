@@ -69,6 +69,7 @@ public AccountDTO register(Account account) {
         Candidat candidat = Candidat.builder()
             .email(account.getEmail())
             .username(account.getUsername())
+            .phone(account.getPhone())
             .status("incomplet")
             .competences(new ArrayList<>())   // jamais null
             .langues(new ArrayList<>())       // jamais null

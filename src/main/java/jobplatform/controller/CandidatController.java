@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/candidats")
@@ -67,8 +68,12 @@ public class CandidatController {
                     if (updated.getAdresse() != null) existing.setAdresse(updated.getAdresse());
 
                     if (updated.getStatus() != null) {
-                        existing.setStatus(updated.getStatus());
+                        // 🔒 Si déjà actif → on bloque
+                        if (!"active".equals(existing.getStatus())) {
+                            existing.setStatus(updated.getStatus());
+                        }
                     }
+
 
 
                     // 🔹 Progression (calcul côté front ? côté back ?)
@@ -98,16 +103,21 @@ public class CandidatController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{id}/status")
+    @PutMapping("/{id}/status")
     public ResponseEntity<Candidat> updateStatus(
             @PathVariable Long id,
-            @RequestParam String status) {
+            @RequestBody Map<String, String> body) {
+
+        String status = body.get("status");
+
+        if (status == null || status.isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         return candidatService.getById(id)
                 .map(existing -> {
-                    existing.setStatus(status);  // Met à jour uniquement le status
-                    Candidat saved = candidatService.save(existing);
-                    return ResponseEntity.ok(saved);
+                    existing.setStatus(status);
+                    return ResponseEntity.ok(candidatService.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
