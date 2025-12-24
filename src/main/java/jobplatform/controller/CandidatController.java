@@ -27,17 +27,20 @@ public class CandidatController {
         return candidatService.getAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Candidat> getById(@PathVariable Long id) {
-        return candidatService.getById(id)
+    // 🔹 Récupérer un candidat par email
+    @GetMapping("/search/by-email")
+    public ResponseEntity<Candidat> getCandidatByEmail(@RequestParam String email) {
+        System.out.println("📌 Email reçu : " + email);
+        return candidatService.getByEmail(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    // 🔹 Récupérer un candidat par email
-    // 🔹 Récupérer un candidat par email
-    @GetMapping("/by-email/{email}")
-    public ResponseEntity<Candidat> getCandidatByEmail(@PathVariable String email) {
-        return candidatService.getByEmail(email)
+
+
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Candidat> getById(@PathVariable Long id) {
+        return candidatService.getById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
