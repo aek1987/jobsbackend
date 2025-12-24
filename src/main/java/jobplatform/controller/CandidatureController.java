@@ -54,5 +54,18 @@ public class CandidatureController {
         return response;
     }
 
+    
+ // Vérifier si un candidat a déjà postulé à une offre
+    @GetMapping("/check")
+    public Map<String, Boolean> hasCandidatPostule(
+            @RequestParam Long offreId,
+            @RequestParam Long candidatId) {
+
+        boolean exists = candidatureRepository.findByCandidatRefIdAndOffreId(candidatId, offreId).isPresent();
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("postule", exists);
+        return response;
+    }
+
 
 }
