@@ -39,7 +39,7 @@ public class CandidatureService {
                 .offreId(offre.getId())
                 .candidat(candidat)
                 .dateCandidature(LocalDateTime.now())
-                .statut("en attente")
+                .statut("en_attente")
                 .message(message)
                 .build();
 
