@@ -15,13 +15,11 @@ public interface OffreMapper {
     Offre findById(@Param("id") Long id);
 
     @Insert("""
-    	    INSERT INTO offre (poste, contrat, localisation, salaire, date_publication, entreprise_id)
-    	    VALUES (#{poste}, #{contrat}, #{localisation}, #{salaire}, #{datePublication}, #{entrepriseId})
-    	""")
-    	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    	void insert(Offre offre);
-
-
+        INSERT INTO offre (poste, contrat, localisation, salaire, date_publication, entreprise_id)
+        VALUES (#{poste}, #{contrat}, #{localisation}, #{salaire}, #{datePublication}, #{entrepriseId})
+    """)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    void insert(Offre offre);
 
     @Update("""
         UPDATE offre
@@ -50,86 +48,81 @@ public interface OffreMapper {
     """)
     List<Offre> findAllPaged(@Param("limit") int limit, @Param("offset") int offset);
 
+    // Filtrage avec expérience et salaire min/max
     @Select("""
-    		<script>
-    		SELECT * FROM offre
-    		<where>
+    <script>
+    SELECT * FROM offre
+    <where>
+        <if test="secteur != null and secteur != ''">
+            AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
+        </if>
+        <if test="contrat != null and contrat != ''">
+            AND LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%'))
+        </if>
+        <if test="localisation != null and localisation != ''">
+            AND LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%'))
+        </if>
+        <if test="teletravail != null and teletravail != ''">
+            AND LOWER(teletravail) LIKE LOWER(CONCAT('%', #{teletravail}, '%'))
+        </if>
+        <if test="experience != null and experience != ''">
+            AND LOWER(experience) LIKE LOWER(CONCAT('%', #{experience}, '%'))
+        </if>
+        <if test="salaireMin != null">
+            AND salaire &gt;= #{salaireMin}
+        </if>
+        <if test="salaireMax != null">
+            AND salaire &lt;= #{salaireMax}
+        </if>
+    </where>
+    ORDER BY date_publication DESC
+    LIMIT #{limit} OFFSET #{offset}
+    </script>
+    """)
+    List<Offre> filterOffres(
+        @Param("secteur") String secteur,
+        @Param("contrat") String contrat,
+        @Param("localisation") String localisation,
+        @Param("teletravail") String teletravail,
+        @Param("experience") String experience,
+        @Param("salaireMin") Double salaireMin,
+        @Param("salaireMax") Double salaireMax,
+        @Param("limit") int limit,
+        @Param("offset") int offset
+    );
 
-    		  <if test="secteur != null and secteur != ''">
-    		    AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
-    		  </if>
-
-    		  <if test="contrat != null and contrat != ''">
-    		    AND LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%'))
-    		  </if>
-
-    		  <if test="localisation != null and localisation != ''">
-    		    AND LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%'))
-    		  </if>
-    		    <if test="teletravail != null and teletravail != ''">
-    		    AND LOWER(teletravail) LIKE LOWER(CONCAT('%', #{teletravail}, '%'))
-    		  </if>
-             
-    		<if test="experience != null and experience != ''">
-  LOWER(experience) LIKE LOWER(CONCAT('%', #{experience}, '%'))
-</if>
-
-    		  <if test="salaireMin != null">
-    		    AND salaire &gt;= #{salaireMin}
-    		  </if>
-
-    		</where>
-    		ORDER BY date_publication DESC
-    		LIMIT #{limit} OFFSET #{offset}
-    		</script>
-    		""")
-  		List<Offre> filterOffres(
-    		    @Param("secteur") String secteur,
-    		    @Param("contrat") String contrat,
-    		    @Param("localisation") String localisation, 
-    		    @Param("teletravail") String teletravail,    		   
-    		    @Param("salaireMin") Double salaireMin,
-    		    @Param("experience") String experience,
-    		    @Param("limit") int limit,
-    		    @Param("offset") int offset
-    		);
-
-
-    // 🆕 Ajout pour que la pagination filtrée fonctionne correctement :
     @Select("""
-    		<script>
-    		SELECT COUNT(*) FROM offre
-    		<where>
-
-    		  <if test="secteur != null and secteur != ''">
-    		    AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
-    		  </if>
-
-    		  <if test="contrat != null and contrat != ''">
-    		    AND LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%'))
-    		  </if>
-
-    		  <if test="localisation != null and localisation != ''">
-    		    AND LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%'))
-    		  </if>
-
-    		  <if test="salaireMin != null">
-    		    AND salaire &gt;= #{salaireMin}
-    		  </if>
-    		   <if test="experience != null and experience != ''">
-    		    AND LOWER(experience) LIKE LOWER(CONCAT('%', #{experience}, '%'))
-    		  </if>
-
-
-    		</where>
-    		</script>
-    		""")
-    		int countFiltered(
-    		    @Param("secteur") String secteur,
-    		    @Param("contrat") String contrat,
-    		    @Param("localisation") String localisation,
-    		    @Param("salaireMin") Double salaireMin,
-    		    @Param("experience") String experience
-    		);
+    <script>
+    SELECT COUNT(*) FROM offre
+    <where>
+        <if test="secteur != null and secteur != ''">
+            AND LOWER(secteur) LIKE LOWER(CONCAT('%', #{secteur}, '%'))
+        </if>
+        <if test="contrat != null and contrat != ''">
+            AND LOWER(contrat) LIKE LOWER(CONCAT('%', #{contrat}, '%'))
+        </if>
+        <if test="localisation != null and localisation != ''">
+            AND LOWER(localisation) LIKE LOWER(CONCAT('%', #{localisation}, '%'))
+        </if>
+        <if test="experience != null and experience != ''">
+            AND LOWER(experience) LIKE LOWER(CONCAT('%', #{experience}, '%'))
+        </if>
+        <if test="salaireMin != null">
+            AND salaire &gt;= #{salaireMin}
+        </if>
+        <if test="salaireMax != null">
+            AND salaire &lt;= #{salaireMax}
+        </if>
+    </where>
+    </script>
+    """)
+    int countFiltered(
+        @Param("secteur") String secteur,
+        @Param("contrat") String contrat,
+        @Param("localisation") String localisation,
+        @Param("experience") String experience,
+        @Param("salaireMin") Double salaireMin,
+        @Param("salaireMax") Double salaireMax
+    );
 
 }
