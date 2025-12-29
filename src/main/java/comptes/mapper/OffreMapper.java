@@ -69,6 +69,10 @@ public interface OffreMapper {
     		    <if test="teletravail != null and teletravail != ''">
     		    AND LOWER(teletravail) LIKE LOWER(CONCAT('%', #{teletravail}, '%'))
     		  </if>
+             
+    		<if test="experience != null and experience != ''">
+  LOWER(experience) LIKE LOWER(CONCAT('%', #{experience}, '%'))
+</if>
 
     		  <if test="salaireMin != null">
     		    AND salaire &gt;= #{salaireMin}
@@ -85,7 +89,7 @@ public interface OffreMapper {
     		    @Param("localisation") String localisation, 
     		    @Param("teletravail") String teletravail,    		   
     		    @Param("salaireMin") Double salaireMin,
-    		    @Param("exeperience") String exeperience,
+    		    @Param("experience") String experience,
     		    @Param("limit") int limit,
     		    @Param("offset") int offset
     		);
@@ -112,8 +116,8 @@ public interface OffreMapper {
     		  <if test="salaireMin != null">
     		    AND salaire &gt;= #{salaireMin}
     		  </if>
-    		   <if test="exeperience != null and exeperience != ''">
-    		    AND LOWER(exeperience) LIKE LOWER(CONCAT('%', #{exeperience}, '%'))
+    		   <if test="experience != null and experience != ''">
+    		    AND LOWER(experience) LIKE LOWER(CONCAT('%', #{experience}, '%'))
     		  </if>
 
 
@@ -125,7 +129,7 @@ public interface OffreMapper {
     		    @Param("contrat") String contrat,
     		    @Param("localisation") String localisation,
     		    @Param("salaireMin") Double salaireMin,
-    		    @Param("exeperience") String exeperience
+    		    @Param("experience") String experience
     		);
 
 }

@@ -24,16 +24,15 @@ public class Offre {
     private String localisation;
     private Double salaire;
     private String contrat;
-    private String teletravail;
-  
+    private String teletravail;  
     private String avantages;
     private String status; 
     private String secteur;
     @Column(name = "entreprise_id")
     private Long entrepriseId;
 
-    @Column(name = "niveau_experience")
-    private String niveauExperience;
+   
+    private String experience;
     private LocalDate datePublication;
     private LocalDate dateLimite;
 
