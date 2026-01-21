@@ -29,6 +29,7 @@ public class OffreService {
 
     public Offre save(Offre offre) {
         if (offre.getId() == null || offre.getId() == 0) {
+        	 offre.setId(null);
             offreMapper.insert(offre); // L'ID sera rempli automatiquement
         } else {
             offreMapper.update(offre);
